@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+/* ============================================================
+   THE FIT MUSLIM — design tokens
+   Obsidian black · antique gold · forest green · parchment
+   ============================================================ */
+@theme {
+  --color-obsidian: #050604;
+  --color-obsidian-2: #0a0c09;
+  --color-green-900: #0a2419;
+  --color-green-800: #0f3324;
+  --color-green-700: #14442f;
+
+  --color-gold: #d4af37;
+  --color-gold-soft: #e8c766;
+  --color-gold-bright: #f6e6b4;
+  --color-gold-deep: #b8860b;
+
+  --color-cream: #f4ecd8;
+  --color-parchment: #e8dcc0;
+  --color-ink: #b8ad92;
+
+  --font-display: "Playfair Display", serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-arabic: "Amiri", serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-obsidian);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-gold);
+  color: #000;
+}
+
+/* gentle gold shimmer used sparingly on key words */
+.text-gold-gradient {
+  background: linear-gradient(
+    100deg,
+    var(--color-gold-deep) 0%,
+    var(--color-gold-bright) 45%,
+    var(--color-gold) 70%,
+    var(--color-gold-deep) 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 8s linear infinite;
+}
+@keyframes shimmer {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto;
+  }
+}
