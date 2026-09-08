@@ -41,20 +41,20 @@ const PILLARS = [
 
 export default function Pillars() {
   return (
-    <section className="relative border-y border-gold/10 bg-obsidian-2/40 px-6 py-24 md:py-32">
+    <section className="relative border-y border-linen bg-sand px-6 py-24 md:py-32">
       <div className="mx-auto grid max-w-6xl gap-14 md:grid-cols-3 md:gap-8">
         {PILLARS.map((p, i) => (
           <Reveal key={p.title} delay={i * 0.12} className="flex flex-col items-center text-center">
-            <div className="mb-6 grid h-16 w-16 place-items-center rounded-full border border-gold/25 text-gold-soft">
+            <div className="mb-6 grid h-16 w-16 place-items-center rounded-full border border-gold/40 bg-ivory text-gold-deep shadow-[0_10px_24px_-18px_rgba(21,24,21,0.5)]">
               <svg viewBox="0 0 48 48" className="h-8 w-8">
                 {p.icon}
               </svg>
             </div>
-            <h3 className="font-display text-xl font-semibold tracking-[0.16em] text-cream">
+            <h3 className="font-display text-xl font-semibold tracking-[0.14em] text-ink">
               {p.title}
             </h3>
-            <div className="my-4 h-px w-8 bg-gold/40" />
-            <p className="max-w-xs font-serif text-lg leading-relaxed text-ink">{p.body}</p>
+            <div className="my-4 h-px w-8 bg-gold/60" />
+            <p className="max-w-xs font-serif text-lg leading-relaxed text-ink-soft">{p.body}</p>
           </Reveal>
         ))}
       </div>

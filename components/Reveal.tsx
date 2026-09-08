@@ -40,10 +40,10 @@ export default function Reveal({
 /** A small heraldic section label: rule · eyebrow · rule */
 export function SectionEyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="mb-5 flex items-center justify-center gap-3 text-[0.68rem] uppercase tracking-[0.42em] text-gold-soft">
-      <span className="h-px w-10 bg-gradient-to-r from-transparent to-gold/60" />
+    <p className="mb-5 flex items-center justify-center gap-3 text-[0.68rem] font-semibold uppercase tracking-[0.42em] text-gold-deep">
+      <span className="h-px w-10 bg-linear-to-r from-transparent to-gold/70" />
       {children}
-      <span className="h-px w-10 bg-gradient-to-l from-transparent to-gold/60" />
+      <span className="h-px w-10 bg-linear-to-l from-transparent to-gold/70" />
     </p>
   );
 }

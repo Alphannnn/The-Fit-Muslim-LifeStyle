@@ -7,6 +7,12 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  // better-sqlite3 ships a native binding — it must stay a real require()
+  // instead of being bundled into the server chunks.
+  serverExternalPackages: ["better-sqlite3"],
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
+  },
 };
 
 export default nextConfig;

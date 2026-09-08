@@ -1,33 +1,73 @@
 @import "tailwindcss";
 
 /* ============================================================
-   THE FIT MUSLIM — design tokens
-   Obsidian black · antique gold · forest green · parchment
+   THE FIT MUSLIM — design tokens (LIGHT)
+   Ivory & linen · deep forest green · antique gold · ink
    ============================================================ */
 @theme {
-  --color-obsidian: #050604;
-  --color-obsidian-2: #0a0c09;
-  --color-green-900: #0a2419;
-  --color-green-800: #0f3324;
-  --color-green-700: #14442f;
+  /* ---- surfaces ---- */
+  --color-ivory: #fcfaf6;
+  --color-sand: #f6f1e7;
+  --color-linen: #efe7d8;
+  --color-shell: #ffffff;
 
-  --color-gold: #d4af37;
-  --color-gold-soft: #e8c766;
-  --color-gold-bright: #f6e6b4;
-  --color-gold-deep: #b8860b;
+  /* ---- text ----
+     ink-muted is used at very small sizes for meta and captions, so it is
+     tuned to clear WCAG AA (4.5:1) against ivory rather than to look pretty
+     in isolation. */
+  --color-ink: #151815; /* headings */
+  --color-ink-soft: #414a43; /* body copy */
+  --color-ink-muted: #69716a; /* meta, captions */
 
-  --color-cream: #f4ecd8;
-  --color-parchment: #e8dcc0;
-  --color-ink: #b8ad92;
+  /* ---- brand green ---- */
+  --color-green-900: #0d281c;
+  --color-green-800: #12402c;
+  --color-green-700: #1a5a3d;
+  --color-green-500: #2c7d57;
 
-  --font-display: "Playfair Display", serif;
-  --font-serif: "Cormorant Garamond", serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  /* ---- antique gold (darkened for legibility on light) ---- */
+  --color-gold: #a97f22;
+  --color-gold-soft: #c0942f;
+  --color-gold-bright: #e3c37c;
+  --color-gold-deep: #7a5a13;
+
+  /* ---- type ----
+     Fraunces        — editorial display serif, optical-size aware
+     Source Serif 4  — calm, highly readable body serif
+     Plus Jakarta    — neat geometric-humanist UI sans
+     Amiri           — Arabic                                        */
+  --font-display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-arabic: "Amiri", serif;
+
+  /* ---- admin panel ----
+     The storefront is warm and editorial; the admin panel is a tool. Cooler
+     neutrals, tighter contrast steps, and a dark rail to separate chrome from
+     content at a glance. */
+  --color-panel: #f4f6f5;
+  --color-panel-surface: #ffffff;
+  --color-panel-raised: #fafbfa;
+  --color-panel-border: #e2e6e3;
+  --color-panel-border-strong: #cfd6d1;
+  --color-panel-ink: #12160f;
+  --color-panel-soft: #4e564f;
+  --color-panel-muted: #7b837c;
+  --color-rail: #0c1a12;
+  --color-rail-hover: #162b1e;
+  --color-rail-active: #1d3a28;
+  --color-danger: #b42318;
+  --color-danger-soft: #fef3f2;
+  --color-warning: #b54708;
+  --color-warning-soft: #fffaeb;
+  --color-success: #2c7d57;
+  --color-success-soft: #ecfdf3;
+  --color-info: #175cd3;
+  --color-info-soft: #eff8ff;
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 * {
@@ -39,16 +79,101 @@ html {
 }
 
 body {
-  background: var(--color-obsidian);
-  color: var(--color-cream);
+  background: var(--color-ivory);
+  color: var(--color-ink-soft);
   font-family: var(--font-sans);
+  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
   overflow-x: hidden;
+  /* a touch more air between lines — the UI sans is set small in a lot of
+     places and the extra leading is what makes it read rather than scan */
+  line-height: 1.55;
+}
+
+/* ============================================================
+   Interaction
+   Defined once here so every button, link, card and field behaves
+   the same way without each component re-inventing it.
+   ============================================================ */
+
+/* Keyboard users get a real, visible ring everywhere. Pointer users never
+   see it — which is why inputs can keep their quiet `outline-none` look. */
+:focus-visible {
+  /* no radius here — the outline already follows the element's own corners */
+  outline: 2px solid var(--color-green-700);
+  outline-offset: 2px;
+}
+
+/* Fields: the border colour alone is a weak signal, so pair it with a soft
+   ring that reads at a glance. */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-gold) 22%, transparent);
+}
+
+input,
+select,
+textarea {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+/* Hovering a field should hint that it is editable before you click it. */
+input:hover:not(:disabled):not(:focus),
+select:hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus) {
+  border-color: color-mix(in srgb, var(--color-gold) 45%, var(--color-linen));
+}
+
+/* A small physical press. Subtle enough to feel like the button moved,
+   not like the layout shifted. Inline links inside long-form copy are
+   excluded — nudging a word mid-sentence just reads as a glitch. */
+button:not(:disabled):active,
+a[href]:active {
+  transform: translateY(1px);
+}
+.prose-tfm a:active {
+  transform: none;
+}
+
+button,
+a[href] {
+  transition-property: color, background-color, border-color, transform, box-shadow, opacity;
+  transition-duration: 0.22s;
+  transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Data tables — admin lists and the prayer month — get a row highlight so the
+   eye can track across a wide row. */
+tbody tr {
+  transition: background-color 0.18s ease;
+}
+tbody tr:hover {
+  background-color: color-mix(in srgb, var(--color-gold) 7%, transparent);
+}
+
+
+/* Fraunces reads best with a low "wonk" and a touch of softness at
+   display sizes — set once here so every heading inherits it. */
+.font-display {
+  font-variation-settings: "SOFT" 20, "WONK" 0;
+  letter-spacing: -0.015em;
 }
 
 ::selection {
-  background: var(--color-gold);
-  color: #000;
+  background: var(--color-green-800);
+  color: var(--color-ivory);
 }
 
 /* gentle gold shimmer used sparingly on key words */
@@ -56,8 +181,8 @@ body {
   background: linear-gradient(
     100deg,
     var(--color-gold-deep) 0%,
-    var(--color-gold-bright) 45%,
-    var(--color-gold) 70%,
+    var(--color-gold) 40%,
+    var(--color-gold-soft) 62%,
     var(--color-gold-deep) 100%
   );
   background-size: 200% 100%;
@@ -69,6 +194,198 @@ body {
 @keyframes shimmer {
   to {
     background-position: 200% 0;
+  }
+}
+
+/* ============================================================
+   Long-form copy (journal bodies, product descriptions, plans).
+   Hand-rolled rather than pulling in the typography plugin, so the
+   rhythm matches the display/serif pairing used everywhere else.
+   ============================================================ */
+.prose-tfm {
+  font-family: var(--font-serif);
+  font-size: 1.12rem;
+  line-height: 1.75;
+  color: var(--color-ink-soft);
+}
+.prose-tfm > * + * {
+  margin-top: 1.25em;
+}
+.prose-tfm h2 {
+  font-family: var(--font-display);
+  font-variation-settings: "SOFT" 20, "WONK" 0;
+  letter-spacing: -0.015em;
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--color-ink);
+  margin-top: 2.2em;
+}
+.prose-tfm h3 {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-top: 1.8em;
+}
+.prose-tfm strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.prose-tfm a {
+  color: var(--color-green-700);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-gold) 55%, transparent);
+  text-underline-offset: 3px;
+}
+.prose-tfm a:hover {
+  color: var(--color-green-900);
+}
+.prose-tfm ul {
+  padding-left: 1.15em;
+  list-style: none;
+}
+.prose-tfm ul > li {
+  position: relative;
+  padding-left: 0.9em;
+}
+.prose-tfm ul > li + li {
+  margin-top: 0.55em;
+}
+.prose-tfm ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--color-gold);
+}
+.prose-tfm blockquote {
+  border-left: 2px solid color-mix(in srgb, var(--color-gold) 60%, transparent);
+  padding-left: 1.15em;
+  font-style: italic;
+  color: var(--color-ink);
+}
+.prose-tfm code {
+  font-size: 0.9em;
+  background: var(--color-sand);
+  border: 1px solid var(--color-linen);
+  border-radius: 3px;
+  padding: 0.1em 0.35em;
+}
+
+/* ============================================================
+   Admin panel
+   Scoped to .admin-scope so none of it can leak into the
+   storefront's editorial styling.
+   ============================================================ */
+.admin-scope {
+  background: var(--color-panel);
+  color: var(--color-panel-soft);
+  font-feature-settings: "tnum" 1; /* aligned figures in every table */
+}
+
+.admin-scope h1,
+.admin-scope h2,
+.admin-scope h3,
+.admin-scope th {
+  color: var(--color-panel-ink);
+}
+
+/* Tables in the panel are dense and scannable rather than decorative. */
+.admin-scope table {
+  font-variant-numeric: tabular-nums;
+}
+.admin-scope tbody tr:hover {
+  background-color: var(--color-panel-raised);
+}
+
+/* One consistent field look across every admin form. */
+.admin-field {
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--color-panel-border-strong);
+  background: var(--color-panel-surface);
+  padding: 0.5rem 0.7rem;
+  font-size: 0.875rem;
+  color: var(--color-panel-ink);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.admin-field::placeholder {
+  color: var(--color-panel-muted);
+}
+.admin-field:hover:not(:disabled):not(:focus) {
+  border-color: var(--color-panel-muted);
+}
+.admin-field:focus,
+.admin-field:focus-visible {
+  outline: none;
+  border-color: var(--color-green-700);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-green-700) 16%, transparent);
+}
+.admin-field:disabled {
+  background: var(--color-panel);
+  color: var(--color-panel-muted);
+  cursor: not-allowed;
+}
+
+.admin-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--color-panel-soft);
+  margin-bottom: 0.35rem;
+}
+
+/* The dark rail keeps its own focus colour so the ring stays visible. */
+.admin-rail :focus-visible {
+  outline-color: var(--color-gold-bright);
+}
+
+/* Sticky table headers for long lists. */
+.admin-scope thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--color-panel-raised);
+}
+
+@keyframes admin-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.admin-toast {
+  animation: admin-toast-in 0.24s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Plans are meant to be printed and stuck on a fridge. */
+@media print {
+  body {
+    background: #fff;
+  }
+  .print\:hidden,
+  header[class*="fixed"],
+  footer {
+    display: none !important;
+  }
+  .print-plain {
+    border: none !important;
+    box-shadow: none !important;
+    background: #fff !important;
+  }
+  .break-inside-avoid {
+    break-inside: avoid;
   }
 }
 
