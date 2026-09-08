@@ -1,10 +1,26 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import CartProvider from "@/components/CartProvider";
+import CartDrawer from "@/components/CartDrawer";
+import { SITE, siteOrigin } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "The Fit Muslim — Faith. Discipline. Strength.",
-  description:
-    "Premium Islamic & fitness essentials, faith-driven training, and personalised, expert-approved diet plans. Where discipline of the soul meets strength of the body.",
+  /* metadataBase makes every relative canonical/OG url in the app absolute */
+  metadataBase: new URL(siteOrigin()),
+  title: {
+    default: `${SITE.name} — Faith. Discipline. Strength.`,
+    template: `%s · ${SITE.name}`,
+  },
+  description: SITE.description,
+  openGraph: {
+    type: "website",
+    siteName: SITE.name,
+    title: `${SITE.name} — Faith. Discipline. Strength.`,
+    description: SITE.description,
+    url: siteOrigin(),
+  },
+  twitter: { card: "summary_large_image" },
+  robots: { index: true, follow: true },
 };
 
 export default function RootLayout({
@@ -16,17 +32,19 @@ export default function RootLayout({
     <html lang="en" className="h-full">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&family=Amiri:wght@400;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=Plus+Jakarta+Sans:ital,wght@0,300..700;1,400..600&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..600;1,8..60,300..600&display=swap"
           rel="stylesheet"
         />
+        <meta name="theme-color" content="#fcfaf6" />
       </head>
-      <body className="min-h-full antialiased">{children}</body>
+      <body className="min-h-full bg-ivory antialiased">
+        <CartProvider>
+          {children}
+          <CartDrawer />
+        </CartProvider>
+      </body>
     </html>
   );
 }

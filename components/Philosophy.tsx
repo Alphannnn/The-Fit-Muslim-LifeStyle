@@ -18,10 +18,10 @@ function Seal() {
       <defs>
         <path id="sealArc" d="M70 70 m-52,0 a52,52 0 1,1 104,0 a52,52 0 1,1 -104,0" />
       </defs>
-      <circle cx="70" cy="70" r="64" fill="#050604" stroke="var(--color-gold)" strokeWidth="1" strokeOpacity="0.5" />
-      <circle cx="70" cy="70" r="54" fill="none" stroke="var(--color-gold)" strokeWidth="0.6" strokeOpacity="0.4" />
+      <circle cx="70" cy="70" r="64" fill="var(--color-ivory)" stroke="var(--color-gold)" strokeWidth="1" strokeOpacity="0.7" />
+      <circle cx="70" cy="70" r="54" fill="none" stroke="var(--color-gold)" strokeWidth="0.6" strokeOpacity="0.5" />
       <text
-        fill="var(--color-gold-soft)"
+        fill="var(--color-gold-deep)"
         style={{ fontSize: "9.5px", letterSpacing: "3.4px", fontFamily: "var(--font-sans)" }}
       >
         <textPath href="#sealArc" startOffset="0">
@@ -45,37 +45,37 @@ export default function Philosophy() {
         <Reveal className="order-2 md:order-1">
           <div className="mb-6 flex items-center gap-4">
             <span className="h-px w-12 bg-gold/60" />
-            <span className="text-[0.66rem] uppercase tracking-[0.42em] text-gold-soft">
+            <span className="text-[0.66rem] font-semibold uppercase tracking-[0.42em] text-gold-deep">
               Our Philosophy
             </span>
           </div>
 
-          <h2 className="font-display text-4xl font-medium leading-[1.08] tracking-tight text-cream sm:text-5xl md:text-[3.4rem]">
+          <h2 className="font-display text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl md:text-[3.4rem]">
             More Than Fitness.
             <br />
             <span className="italic text-gold-gradient">A Way of Life.</span>
           </h2>
 
-          <p className="mt-7 max-w-md font-serif text-xl leading-relaxed text-ink">
+          <p className="mt-7 max-w-md font-serif text-xl leading-relaxed text-ink-soft">
             The Fit Muslim is built on the belief that true strength begins with
             character. Every product we curate and every plan we craft is a
             reminder of your purpose, your discipline, and your Deen.
           </p>
 
-          <p className="mt-4 max-w-md font-serif text-xl leading-relaxed text-ink">
+          <p className="mt-4 max-w-md font-serif text-xl leading-relaxed text-ink-soft">
             We don&apos;t sell a lifestyle. We help you honour the one already
             written for you — body and soul.
           </p>
 
           <a
             href="#"
-            className="group relative mt-9 inline-flex items-center gap-3 overflow-hidden border border-gold/50 px-8 py-4 text-[0.72rem] uppercase tracking-[0.28em] text-gold-soft transition-colors duration-500 hover:text-obsidian"
+            className="group relative mt-9 inline-flex items-center gap-3 overflow-hidden border border-gold/60 px-8 py-4 text-[0.72rem] font-semibold uppercase tracking-[0.28em] text-gold-deep transition-colors duration-500 hover:text-ivory"
           >
             <span className="relative z-10">Our Mission</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="relative z-10 h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1">
               <path d="M5 12h14M13 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <span className="absolute inset-0 -z-0 origin-left scale-x-0 bg-gradient-to-r from-gold-bright via-gold to-gold-deep transition-transform duration-500 ease-out group-hover:scale-x-100" />
+            <span className="absolute inset-0 z-0 origin-left scale-x-0 bg-linear-to-r from-green-700 via-green-800 to-green-900 transition-transform duration-500 ease-out group-hover:scale-x-100" />
           </a>
         </Reveal>
 
