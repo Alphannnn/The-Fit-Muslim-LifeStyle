@@ -7,9 +7,9 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
-  // better-sqlite3 ships a native binding — it must stay a real require()
-  // instead of being bundled into the server chunks.
-  serverExternalPackages: ["better-sqlite3"],
+  // The libSQL client resolves a native binding for local file databases; it
+  // must stay a real require() rather than be bundled into the server chunks.
+  serverExternalPackages: ["@libsql/client"],
   images: {
     remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" }],
   },

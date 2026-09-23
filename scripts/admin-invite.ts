@@ -7,6 +7,7 @@
  * admin on a fresh database is created from here. After that, invitations are
  * normally issued from Admin → Team.
  */
+import "../lib/db/env"; // before ../lib/db, which reads process.env as it loads
 import { eq, inArray } from "drizzle-orm";
 import { db } from "../lib/db";
 import { users } from "../lib/db/schema";

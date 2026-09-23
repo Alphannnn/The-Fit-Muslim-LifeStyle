@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "share": "bash scripts/share.sh",
+    "share:stop": "bash scripts/share.sh stop",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "db:push": "mkdir -p .data && drizzle-kit push --force",
@@ -16,7 +18,7 @@
     "admin:invite": "tsx scripts/admin-invite.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^13.0.3",
+    "@libsql/client": "^0.18.0",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^11.15.0",
     "next": "16.2.10",
@@ -27,7 +29,6 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

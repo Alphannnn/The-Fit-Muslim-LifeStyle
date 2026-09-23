@@ -5,6 +5,7 @@
  *
  *   pnpm db:push && pnpm db:seed
  */
+import "./env"; // must come before ./index: it reads process.env as it loads
 import { eq } from "drizzle-orm";
 import { db } from "./index";
 import { hashPassword } from "../auth/password";

@@ -1,3 +1,7 @@
-ignoredBuiltDependencies:
-  - sharp
-  - unrs-resolver
+allowBuilds:
+  # drizzle-kit keeps better-sqlite3 as an optional driver; this app talks to
+  # libSQL, so its native build is not needed
+  better-sqlite3: false
+  esbuild: false
+  sharp: false
+  unrs-resolver: false

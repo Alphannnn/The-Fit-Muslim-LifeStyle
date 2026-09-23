@@ -115,11 +115,11 @@ export async function getPosts(limit?: number) {
 
 export async function getPostBySlug(slug: string) {
   return (
-    db
+    (await db
       .select()
       .from(journalPosts)
       .where(and(eq(journalPosts.slug, slug), eq(journalPosts.published, true)))
-      .get() ?? null
+      .get()) ?? null
   );
 }
 

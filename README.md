@@ -123,7 +123,7 @@ Restricted areas are both hidden from the sidebar and guarded server-side.
 | Framework | **Next.js 16** (App Router) + **TypeScript** |
 | Styling | **Tailwind CSS v4** with custom design tokens |
 | Motion | **Framer Motion** |
-| Database | **SQLite** via better-sqlite3 + **Drizzle ORM** |
+| Database | **SQLite** via libSQL + **Drizzle ORM** — a file locally, [Turso](https://turso.tech) in production |
 | Payments | **Stripe** Checkout + webhooks |
 | Email | **Resend** (falls back to a database email log) |
 | Fonts | Fraunces · Source Serif 4 · Plus Jakarta Sans · Amiri |
@@ -150,14 +150,35 @@ create the first admin with `pnpm admin:invite` instead of seeding):
 | Admin | `admin@thefitmuslim.co` | `ChangeMe!2026` |
 | Coach | `coach@thefitmuslim.co` | `ChangeMe!2026` |
 
+### Sharing a live preview
+
+Runs the production build on this machine and shares it through an
+[ngrok](https://ngrok.com) tunnel — no hosting or database provisioning needed.
+
+```bash
+pnpm share        # build, serve on 127.0.0.1:3000, open the tunnel, print the link
+pnpm share:stop   # stop the server and the tunnel
+```
+
+Re-running `pnpm share` after a code change rebuilds and restarts the server but
+keeps the open tunnel, so the link stays the same. A new tunnel gets a new random
+link unless `NGROK_DOMAIN` names a reserved domain. The database is seeded only
+when it is empty, so set `SEED_ADMIN_PASSWORD` / `SEED_COACH_PASSWORD` first if
+the preview starts from scratch. Logs live in `.data/share/`. On ngrok's free plan
+each visitor clicks through a one-time "Visit Site" notice.
+
 ### Database commands
 
 ```bash
 pnpm db:push     # sync schema.ts to the database
 pnpm db:seed     # (re)seed catalogue, journal and staff accounts — idempotent
 pnpm db:studio   # browse the data
-pnpm db:reset    # wipe and rebuild from scratch
+pnpm db:reset    # wipe and rebuild from scratch — the local file only
 ```
+
+All four read `.env.local`, so with `TURSO_DATABASE_URL` set they act on the
+deployed database instead of the local file. `db:reset` deletes the local file
+before pushing, so it is a development command; it is not how you reset Turso.
 
 ### Staff commands
 
@@ -172,9 +193,11 @@ checkout settles through a clearly-labelled test page so the whole purchase flow
 stays walkable, and without a mail key every send is written to the `email_log`
 table and printed to the console.
 
-To go live, set:
+To go live, set (see `.env.example`):
 
 ```bash
+TURSO_DATABASE_URL=libsql://...               # required in production
+TURSO_AUTH_TOKEN=...
 NEXT_PUBLIC_SITE_URL=https://yourdomain.com   # canonicals, sitemap, Stripe redirects
 STRIPE_SECRET_KEY=sk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...               # webhook → /api/stripe/webhook
@@ -183,15 +206,44 @@ MAIL_FROM="The Fit Muslim <hello@yourdomain.com>"
 TAX_RATE_BPS=0                                # flat tax in basis points; leave 0 for Stripe Tax
 ```
 
+`pnpm db:push` and `pnpm db:seed` read `.env.local` too, so the same commands
+that set up the local file database also set up the deployed one.
+
 Point the Stripe webhook at `/api/stripe/webhook` and subscribe to
 `checkout.session.completed`. The test settlement page disables itself the moment
 `STRIPE_SECRET_KEY` exists.
 
-### Moving to Postgres
+## ▲ Deploying to Vercel
 
-`lib/db/index.ts` is the only Postgres-specific file in the app. Swap the driver
-for `drizzle-orm/node-postgres`, change the dialect in `drizzle.config.ts`, and
-every query carries over unchanged.
+The database is the only thing a serverless host changes about this app. Every
+request there gets a read-only, throwaway filesystem, so the local `.data/tfm.db`
+file cannot come along — but the engine can: Turso is SQLite over HTTP, so the
+schema, the queries and the seed are all unchanged. `lib/db/index.ts` picks the
+file when `TURSO_DATABASE_URL` is unset and Turso when it is set, and refuses to
+start on Vercel with a file database rather than deploying an empty catalogue.
+
+**Set the database up before the first deploy** — the build prerenders the shop
+and the product pages from it.
+
+```bash
+turso db create the-fit-muslim          # or app.turso.tech
+turso db show the-fit-muslim --url      # → TURSO_DATABASE_URL
+turso db tokens create the-fit-muslim   # → TURSO_AUTH_TOKEN
+
+# point the local commands at it, once
+echo 'TURSO_DATABASE_URL=libsql://…' >> .env.local
+echo 'TURSO_AUTH_TOKEN=…'            >> .env.local
+SEED_ADMIN_PASSWORD='…' SEED_COACH_PASSWORD='…' pnpm setup
+```
+
+Then in the Vercel project, under Settings → Environment Variables, add
+`TURSO_DATABASE_URL`, `TURSO_AUTH_TOKEN` and `NEXT_PUBLIC_SITE_URL` for every
+environment (the build reads them too), and deploy. Nothing else is needed: the
+build command, install command and output directory are all Next.js defaults.
+
+Media lives in `public/` and is served from Vercel's CDN, but *which* image or
+video a product shows is a database row — a deployment whose database was never
+seeded has no catalogue and therefore no imagery.
 
 ## 📁 Structure
 

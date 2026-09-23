@@ -52,12 +52,12 @@ export async function getPlanForUser(
 
 export async function getSubscription(userId: string) {
   return (
-    db
+    (await db
       .select()
       .from(subscriptions)
       .where(eq(subscriptions.userId, userId))
       .orderBy(desc(subscriptions.createdAt))
-      .get() ?? null
+      .get()) ?? null
   );
 }
 
