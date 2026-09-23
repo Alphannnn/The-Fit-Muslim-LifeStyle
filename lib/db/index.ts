@@ -10,8 +10,17 @@ import * as schema from "./schema";
    — an order would be written into a container that is discarded seconds later.
    The dialect is identical either way, so every query in the app is unchanged. */
 
-const FILE = process.env.DATABASE_FILE ?? ".data/tfm.db";
-const URL = process.env.TURSO_DATABASE_URL ?? process.env.DATABASE_URL ?? `file:${FILE}`;
+/* Trimmed, and empty treated as absent: these are pasted into a hosting
+   dashboard by hand, and a trailing newline on a token becomes an invalid
+   header — which the service answers with a bare 401 that says nothing about
+   whitespace. An empty box should fall through to the next source, not win. */
+const env = (name: string) => {
+  const value = process.env[name]?.trim();
+  return value ? value : undefined;
+};
+
+const FILE = env("DATABASE_FILE") ?? ".data/tfm.db";
+const URL = env("TURSO_DATABASE_URL") ?? env("DATABASE_URL") ?? `file:${FILE}`;
 
 declare global {
   var __tfmDb: ReturnType<typeof create> | undefined;
@@ -29,7 +38,7 @@ function create() {
     );
   }
   if (URL.startsWith("file:")) mkdirSync(dirname(URL.slice("file:".length)), { recursive: true });
-  const client = createClient({ url: URL, authToken: process.env.TURSO_AUTH_TOKEN });
+  const client = createClient({ url: URL, authToken: env("TURSO_AUTH_TOKEN") });
   /* Local files start with foreign keys off; Turso enforces them already. Fire
      and forget — every query below runs on the same connection, after this. */
   if (URL.startsWith("file:")) {
