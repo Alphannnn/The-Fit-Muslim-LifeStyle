@@ -77,7 +77,7 @@ fi
 products=$(node -e 'const {createClient}=require("@libsql/client");const url=process.env.TURSO_DATABASE_URL??process.env.DATABASE_URL??`file:${process.env.DATABASE_FILE??".data/tfm.db"}`;createClient({url,authToken:process.env.TURSO_AUTH_TOKEN}).execute("select count(*) n from products").then(r=>console.log(r.rows[0].n)).catch(()=>console.log(0))' 2>/dev/null)
 if [[ $products == 0 ]]; then
   echo "→ empty database — creating schema and seeding"
-  pnpm setup
+  pnpm db:setup
 fi
 
 # NEXT_PUBLIC_* is inlined at build time, so the build must know the public link.

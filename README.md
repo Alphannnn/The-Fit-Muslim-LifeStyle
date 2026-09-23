@@ -133,7 +133,7 @@ Restricted areas are both hidden from the sidebar and guarded server-side.
 
 ```bash
 pnpm install
-pnpm setup     # creates the database schema and seeds the catalogue
+pnpm db:setup     # creates the database schema and seeds the catalogue
 pnpm dev
 ```
 
@@ -233,7 +233,7 @@ turso db tokens create the-fit-muslim   # → TURSO_AUTH_TOKEN
 # point the local commands at it, once
 echo 'TURSO_DATABASE_URL=libsql://…' >> .env.local
 echo 'TURSO_AUTH_TOKEN=…'            >> .env.local
-SEED_ADMIN_PASSWORD='…' SEED_COACH_PASSWORD='…' pnpm setup
+SEED_ADMIN_PASSWORD='…' SEED_COACH_PASSWORD='…' pnpm db:setup
 ```
 
 Then in the Vercel project, under Settings → Environment Variables, add
